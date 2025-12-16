@@ -1,0 +1,8 @@
+{
+  "languages": {
+    "JavaScript": { "formatter": "prettier" },
+    "TypeScript": { "formatter": "prettier" },
+    "TSX": { "formatter": "prettier" },
+    "CSS": { "formatter": "prettier" }
+  }
+}
