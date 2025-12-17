@@ -1,5 +1,5 @@
 import { PeriodSection } from '@/app/components/period-section';
-import { Appointment as AppointmentPrisma } from './generated/prisma/client';
+import { Appointment as AppointmentPrisma } from '@prisma/client';
 import { groupAppointmentsByPeriod } from '@/app/utils';
 import { AppointmentForm } from './components/appointment-form';
 import { prisma } from '@/lib/prisma';

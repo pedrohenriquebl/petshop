@@ -12,7 +12,7 @@ import { format, setHours, setMinutes, startOfToday } from 'date-fns';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IMaskInput } from 'react-imask';
+
 import {
   CalendarIcon,
   ChevronDownIcon,
@@ -100,6 +100,23 @@ export const AppointmentForm = ({
   children,
 }: AppointmentFormProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [IMask, setIMask] = useState<any>(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    import('react-imask')
+      .then((m) => {
+        if (mounted && m?.IMaskInput) {
+          setIMask(() => m.IMaskInput);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentFormSchema),
@@ -246,19 +263,27 @@ export const AppointmentForm = ({
                         className="absolute left-3 top-1/2 -translate-y-1/2 transform text-content-brand"
                         size={20}
                       />
-                      <IMaskInput
-                        placeholder="(99) 99999-9999"
-                        mask="(00) 00000-0000"
-                        className="pl-10 flex h-12 w-full rounded-md border border-border-primary
-                                                 bg-background-tertiary px-3 py-2 text-sm text-content-primary ring-offset-background
-                                                 file:border-0 file:bg-transparent file:text-sm file:font-medium
-                                                 placeholder:text-content-secondary focus-visible:outline-none focus-visible:ring-1
-                                                 focus-visible:ring-offset-0 focus-visible:ring-border-brand disabled:cursor-not-allowed
-                                                 disabled:opacity-50 hover:border-border-secondary focus:border-border-brand
-                                                 focus-visible:border-border-brand aria-invalid:ring-destructive/20
-                                                 aria-invalid:border-destructive"
-                        {...field}
-                      />
+                      {IMask ? (
+                        <IMask
+                          placeholder="(99) 99999-9999"
+                          mask="(00) 00000-0000"
+                          className="pl-10 flex h-12 w-full rounded-md border border-border-primary
+                                                   bg-background-tertiary px-3 py-2 text-sm text-content-primary ring-offset-background
+                                                   file:border-0 file:bg-transparent file:text-sm file:font-medium
+                                                   placeholder:text-content-secondary focus-visible:outline-none focus-visible:ring-1
+                                                   focus-visible:ring-offset-0 focus-visible:ring-border-brand disabled:cursor-not-allowed
+                                                   disabled:opacity-50 hover:border-border-secondary focus:border-border-brand
+                                                   focus-visible:border-border-brand aria-invalid:ring-destructive/20
+                                                   aria-invalid:border-destructive"
+                          {...field}
+                        />
+                      ) : (
+                        <Input
+                          placeholder="(99) 99999-9999"
+                          className="pl-10"
+                          {...field}
+                        />
+                      )}
                     </div>
                   </FormControl>
                   <FormMessage />
